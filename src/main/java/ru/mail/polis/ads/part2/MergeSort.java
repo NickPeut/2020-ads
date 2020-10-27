@@ -1,13 +1,17 @@
 package ru.mail.polis.ads.part2;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class MergeSort {
     static class Pair {
-            int first;
-            int second;
+            long first;
+            long second;
 
-            public Pair(int first, int second) {
+            public Pair(long first, long second) {
                 this.first = first;
                 this.second = second;
             }
@@ -26,7 +30,7 @@ public class MergeSort {
                 L[i] = new Pair(arr[l + i]);
             }
             for (int j = 0; j < n2; ++j) {
-                R[j] = new Pair(arr[m + 1 +j]);
+                R[j] = new Pair(arr[m + 1 + j]);
             }
 
             int i = 0, j = 0;
@@ -72,12 +76,36 @@ public class MergeSort {
             }
         }
 
-        public static void main(String[] args) {
-            Scanner in = new Scanner(System.in);
-            int n = in.nextInt();
+    private static class FastScanner {
+        private final BufferedReader reader;
+        private StringTokenizer tokenizer;
+
+        FastScanner(final InputStream in) {
+            reader = new BufferedReader(new InputStreamReader(in));
+        }
+
+        String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+
+    public static void main(final String[] arg) {
+        final FastScanner in = new FastScanner(System.in);
+        int n = in.nextInt();
             Pair[] arr = new Pair[n];
             for (int i = 0; i < n; i++) {
-                int x, y;
+                long x, y;
                 x = in.nextInt();
                 y = in.nextInt();
                 arr[i] = new Pair(x, y);
