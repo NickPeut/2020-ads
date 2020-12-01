@@ -106,7 +106,7 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
 
     @Override
     public void put(@NotNull Key key, @NotNull Value val) {
-        if (size + 2 >= capacity)
+        if (size >= capacity)
             resizeTable();
         int hashKey = hash(key);
         if (table[hashKey] == null) {
