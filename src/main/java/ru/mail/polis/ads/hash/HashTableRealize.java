@@ -1,6 +1,5 @@
 package ru.mail.polis.ads.hash;
 
-import org.checkerframework.checker.units.qual.K;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +13,8 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
     }
 
     HashTableRealize(int sz) {
-        size = sz;
+        capacity = sz;
+        size = 0;
         table = new List[capacity];
         for (int i = 0; i < capacity; ++i) {
             table[i] = new List<Key, Value>();
@@ -52,7 +52,7 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
 
         public void put(Key key, Value val) {
             Node<Key, Value> node = head;
-            while (node.next != null && !node.key.equals(key)) {
+            while (node != null && node.next != null && !node.key.equals(key)) {
                 node = node.next;
             }
             if (node.key.equals(key)) {
@@ -109,7 +109,7 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
         if (size >= capacity)
             resizeTable();
         int hashKey = hash(key);
-        if (table[hashKey] == null) {
+        if (table[hashKey].head == null) {
             table[hashKey] = new List<Key, Value>(key, val);
             size++;
         } else
@@ -133,8 +133,8 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
     @Override
     public @Nullable Value remove(@NotNull Key key) {
         int hashKey = hash(key);
-        if (table[hashKey] == null) return null;
-        return table[hash(key)].remove(key);
+        if (table[hashKey].head == null) return null;
+        return table[hashKey].remove(key);
     }
 
     @Override
@@ -146,6 +146,4 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-
 }
