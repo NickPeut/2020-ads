@@ -117,17 +117,16 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
     }
 
     private void resizeTable() {
-        int newCapacity = capacity * 2;
-        List<Key, Value>[] prevTable = table;
-        table = new List[newCapacity];
+        List<Key, Value>[] newTable = new List[capacity * 2];
         for (int i = 0; i < capacity; i++) {
-            table[i] = new List<>();
-            Node<Key, Value> temp = prevTable[i].head;
+            newTable[i] = new List<>();
+            Node<Key, Value> temp = table[i].head;
             while (temp != null) {
                 this.put(temp.key, temp.value);
             }
         }
-        capacity = newCapacity;
+        capacity = capacity * 2;
+        table = newTable;
     }
 
     @Override
