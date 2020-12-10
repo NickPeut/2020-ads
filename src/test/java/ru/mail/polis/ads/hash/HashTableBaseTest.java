@@ -230,7 +230,7 @@ class HashTableBaseTest {
     void notComparableKey() {
         HashTable<Key, String> table = newStrangeKeyTable();
         HashMap<Key, String> reference = new HashMap<>();
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < 10000; i++) {
             Key key = new Key(RandomStringUtils.random(3));
             String value = RandomStringUtils.random(100);
             table.put(key, value);
