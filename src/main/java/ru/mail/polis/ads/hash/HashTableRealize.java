@@ -106,7 +106,7 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
 
     @Override
     public void put(@NotNull Key key, @NotNull Value val) {
-        if (size >= capacity)
+        if (size + 1 >= capacity)
             resizeTable();
         int hashKey = hash(key);
         if (table[hashKey].head == null) {
@@ -117,16 +117,23 @@ public class HashTableRealize<Key, Value> implements HashTable<Key, Value> {
     }
 
     private void resizeTable() {
-        List<Key, Value>[] newTable = new List[capacity * 2];
+        int prevCapacity = capacity;
+        capacity *= 2;
+        List<Key, Value>[] prevTable = table;
+        table = new List[capacity];
         for (int i = 0; i < capacity; i++) {
-            newTable[i] = new List<>();
-            Node<Key, Value> temp = table[i].head;
+            table[i] = new List<>();
+        }
+        int prevSize = size;
+        size = 0;
+        for (int i = 0; i < prevSize; i++) {
+            if (prevTable[i] == null) continue;
+            Node<Key, Value> temp = prevTable[i].head;
             while (temp != null) {
                 this.put(temp.key, temp.value);
+                temp = temp.next;
             }
         }
-        capacity = capacity * 2;
-        table = newTable;
     }
 
     @Override
