@@ -32,7 +32,7 @@ public class DangerousRoute {
         }
     }
 
-    static class Edge implements Comparable<Edge>{
+    static class Edge implements Comparable<Edge> {
         int from;
         int to;
         int cost;
@@ -52,41 +52,55 @@ public class DangerousRoute {
 
 
     static class DSF {
-        int[] set;
-        int[] rnk;
+        int[] par;
+        int[] rank;
 
         DSF(int size) {
-            set = new int[size];
-            rnk = new int[size];
+            par = new int[size];
+            rank = new int[size];
             for (int i = 0; i < size; i++)
-                set[i] = i;
+                par[i] = i;
+            for (int i = 0; i < size; i++)
+                rank[i] = 1;
         }
 
-        int set(int x) {
-            return x == set[x] ? x : (set[x] = set(set[x]));
+        Boolean same(int a, int b) {
+            return getParent(a) == getParent(b);
+        }
+
+        int getParent(int x) {
+            if (x == par[x])
+                return x;
+            return par[x] = getParent(par[x]);
         }
 
         boolean union(int u, int v) {
-            if ((u = set(u)) == (v = set(v)))
+            u = getParent(u);
+            v = getParent(v);
+            if (u == v)
                 return false;
-            if (rnk[u] < rnk[v]) {
-                set[u] = v;
+            if (rank[u] < rank[v]) {
+                par[u] = v;
             } else {
-                set[v] = u;
-                if (rnk[u] == rnk[v])
-                    rnk[u]++;
+                par[v] = u;
+                if (rank[u] == rank[v])
+                    rank[u]++;
             }
             return true;
         }
     }
+
     static int mstKruskal(Edge[] edges, int n) {
         DSF dsf = new DSF(n);
         Arrays.sort(edges);
         int ret = 0;
-        for (Edge e : edges)
-            if (dsf.union(e.from, e.to))
-                ret = e.cost;
-        return ret;
+        for (Edge e : edges) {
+            dsf.union(e.from, e.to);
+            ret = e.cost;
+            if (dsf.same(0, n - 1))
+                return ret;
+        }
+        return -1;
     }
 
     public static void main(final String[] arg) {
@@ -105,5 +119,4 @@ public class DangerousRoute {
 
         System.out.print(mstKruskal(edges, n));
     }
-
 }
